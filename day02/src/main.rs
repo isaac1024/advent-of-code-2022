@@ -14,6 +14,12 @@ lazy_static! {
         (GameOptions::Paper, GameOptions::Rock),
         (GameOptions::Scissors, GameOptions::Paper),
     ].into_iter().collect();
+
+    static ref LOSER_MAP: HashMap<GameOptions, GameOptions> = vec![
+        (GameOptions::Rock, GameOptions::Paper),
+        (GameOptions::Paper, GameOptions::Scissors),
+        (GameOptions::Scissors, GameOptions::Rock),
+    ].into_iter().collect();
 }
 
 #[derive(Eq, PartialEq, Hash)]
@@ -24,22 +30,26 @@ enum GameOptions {
 }
 
 impl GameOptions {
-    fn score(&self, other: &GameOptions) -> i32 {
-        let base_score = match self {
+    fn self_score(&self) -> i32 {
+        match self {
             GameOptions::Rock => 1,
             GameOptions::Paper => 2,
             GameOptions::Scissors => 3,
-        };
+        }
+    }
+
+    fn score(&self, other: &GameOptions) -> i32 {
+        let score = self.self_score();
 
         if self.win(other) {
-            return base_score + 6;
+            return score + 6;
         }
 
         if self.draw(other) {
-            return base_score + 3;
+            return score + 3;
         }
 
-        base_score
+        score
     }
 
     fn win(&self, other: &GameOptions) -> bool {
@@ -72,6 +82,27 @@ struct GameResult {
 impl GameResult {
     fn score(&self) -> i32 {
         self.your.score(&self.opponent)
+    }
+
+    fn score2(&self) -> i32 {
+        let score: i32;
+        let game_option: &GameOptions;
+        match self.your {
+            GameOptions::Rock => {
+                score = 0;
+                game_option = &WINNER_MAP[&self.opponent];
+            },
+            GameOptions::Paper => {
+                score = 3;
+                game_option = &self.opponent;
+            },
+            GameOptions::Scissors => {
+                score = 6;
+                game_option = &LOSER_MAP[&self.opponent];
+            },
+        };
+
+        score + game_option.self_score()
     }
 }
 
@@ -107,17 +138,17 @@ fn main() {
         expected.parse::<i32>().ok()
     });
     let part_one = matches.get_one::<bool>("one").unwrap().to_owned();
-    // let part_two = matches.get_one::<bool>("two").unwrap().to_owned();
+    let part_two = matches.get_one::<bool>("two").unwrap().to_owned();
 
     if part_one {
         println!("Part one");
         run_part_one(path, expected);
     }
 
-    // if part_two {
-    //     println!("Part two");
-    //     run_part_two(path, expected);
-    // }
+    if part_two {
+        println!("Part two");
+        run_part_two(path, expected);
+    }
 
 
     println!("Finish");
@@ -157,5 +188,32 @@ fn print_part_one_result(game_results: Vec<GameResult>, expected: Option<i32>) {
 fn calculate_score(game_results: Vec<GameResult>) -> i32 {
     game_results.iter()
         .map(|game_result| game_result.score())
+        .sum()
+}
+
+fn run_part_two(path: &String, expected: Option<i32>) {
+    match read_file(path) {
+        Ok(game_results) => print_part_two_result(game_results, expected),
+        Err(error) => println!("{}", error)
+    }
+}
+
+fn print_part_two_result(game_results: Vec<GameResult>, expected: Option<i32>) {
+    let score = calculate_score2(game_results);
+    match expected {
+        Some(expected_value) => {
+            if expected_value == score {
+                println!("Result is ok");
+            } else {
+                println!("Result is not ok");
+            }
+        },
+        None => println!("{}", score)
+    }
+}
+
+fn calculate_score2(game_results: Vec<GameResult>) -> i32 {
+    game_results.iter()
+        .map(|game_result| game_result.score2())
         .sum()
 }
