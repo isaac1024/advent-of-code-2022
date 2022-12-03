@@ -79,17 +79,17 @@ fn main() {
         expected.parse::<i32>().ok()
     });
     let part_one = matches.get_one::<bool>("one").unwrap().to_owned();
-    // let part_two = matches.get_one::<bool>("two").unwrap().to_owned();
+    let part_two = matches.get_one::<bool>("two").unwrap().to_owned();
 
     if part_one {
         println!("Part one");
         run_part_one(path, expected);
     }
 
-    // if part_two {
-    //     println!("Part two");
-    //     run_part_two(path, expected);
-    // }
+    if part_two {
+        println!("Part two");
+        run_part_two(path, expected);
+    }
 
 
     println!("Finish");
@@ -138,4 +138,41 @@ fn items_checker(rucksacks: Vec<String>) -> i32 {
             value
         })
         .sum()
+}
+
+fn run_part_two(path: &String, expected: Option<i32>) {
+    match read_file(path) {
+        Ok(rucksacks) => print_part_two_result(rucksacks, expected),
+        Err(error) => println!("{}", error)
+    }
+}
+
+fn print_part_two_result(rucksacks: Vec<String>, expected: Option<i32>) {
+    let score = items_checker2(rucksacks);
+    match expected {
+        Some(expected_value) => {
+            if expected_value == score {
+                println!("Result is ok");
+            } else {
+                println!("Result is not ok");
+            }
+        },
+        None => println!("{}", score)
+    }
+}
+
+fn items_checker2(rucksacks: Vec<String>) -> i32 {
+    let max = rucksacks.len() / 3;
+    let mut value = 0;
+    for i in 0..max {
+        let mut characters: Vec<char> = vec![];
+        for character in rucksacks[i*3].chars() {
+            if rucksacks[i*3+1].contains(character) && rucksacks[i*3+2].contains(character) && !characters.contains(&character) {
+                value += CHAR_TO_INT[&character];
+                characters.push(character)
+            }
+        }
+    }
+    
+    value
 }
