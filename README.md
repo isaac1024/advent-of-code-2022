@@ -9,3 +9,9 @@ Day 02
 
 - `cargo run -p day02 -- -f ./day02/input --one`
 - `cargo run -p day02 -- -f ./day02/input --two`
+
+
+Day 03
+
+- `cargo run -p day03 -- -f ./day03/input --one`
+- `cargo run -p day03 -- -f ./day03/input --two`
