@@ -1,8 +1,8 @@
 [package]
-name = "day04"
+name = "day05"
 version = "0.1.0"
 authors = ["Isaac Abreu Rodríguez"]
-description = "Advent of code 2022 day 4 solution"
+description = "Advent of code 2022 day 5 solution"
 license = "GPLv3"
 edition = "2021"
 
@@ -10,3 +10,4 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4", features=["cargo"] }
+regex = "1"
