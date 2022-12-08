@@ -35,3 +35,8 @@
 
 - `cargo run -p day07 -- -f ./day07/input --one`
 - `cargo run -p day07 -- -f ./day07/input --two`
+
+## Day 08
+
+- `cargo run -p day08 -- -f ./day08/input --one`
+- `cargo run -p day08 -- -f ./day08/input --two`

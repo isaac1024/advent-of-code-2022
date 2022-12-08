@@ -1,8 +1,8 @@
 [package]
-name = "day07"
+name = "day08"
 version = "0.1.0"
 authors = ["Isaac Abreu Rodríguez"]
-description = "Advent of code 2022 day 7 solution"
+description = "Advent of code 2022 day 8 solution"
 license = "GPLv3"
 edition = "2021"
 
